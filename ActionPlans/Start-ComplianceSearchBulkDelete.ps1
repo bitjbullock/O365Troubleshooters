@@ -49,7 +49,7 @@ $cleanup = {
         [string]$Description = "Selected '$searchname' search query has been updated to remove the exclusions and revert to the initial search query: '$OldContentMatchQuery'"
         [PSCustomObject]$SectionHTML = New-ObjectForHTMLReport -SectionTitle $SectionTitle -SectionTitleColor "Black" -Description $Description -DataType "String" -EffectiveDataString " "
         $null = $TheObjectToConvertToHTML.Add($SectionHTML)
-        Write-Log -function "Start-complianceSearchBulkDelete" -step  "Opting to Keep exclusion for recoverable items folders or Revert to initial search query" -Description "Selected '$searchname' search query has been updated to remove the exclusions and revert to the initial search query: '$OldContentMatchQuery'"
+        Write-Host -function "Start-complianceSearchBulkDelete" -step  "Opting to Keep exclusion for recoverable items folders or Revert to initial search query" -Description "Selected '$searchname' search query has been updated to remove the exclusions and revert to the initial search query: '$OldContentMatchQuery'"
     }
     Else {
         Write-Host -ForegroundColor Yellow "Compliance search $searchname remains configured to exclude the 'Recoverable Items', 'Purges', 'DiscoveryHolds' and 'Versions' folders from its scope."
@@ -60,7 +60,7 @@ $cleanup = {
         [string]$Description = "Selected '$searchname' search query has been updated to keep the exclusions: '$latestquery'"
         [PSCustomObject]$SectionHTML = New-ObjectForHTMLReport -SectionTitle $SectionTitle -SectionTitleColor "Black" -Description $Description -DataType "String" -EffectiveDataString " "
         $null = $TheObjectToConvertToHTML.Add($SectionHTML)
-        Write-Log -function "Start-complianceSearchBulkDelete" -step  "Opting to Keep exclusion for recoverable items folders or Revert to initial search query" -Description "Selected '$searchname' search query is keeping the exclusions and the current search query is: '$latestquery'"
+        Write-Host -function "Start-complianceSearchBulkDelete" -step  "Opting to Keep exclusion for recoverable items folders or Revert to initial search query" -Description "Selected '$searchname' search query is keeping the exclusions and the current search query is: '$latestquery'"
     }
 }  
 
@@ -99,7 +99,7 @@ $ComplianceSearch = Get-ComplianceSearch -Identity $searchname
 If ($compliancesearch.ExchangeLocation.count -ne 1) {
     Write-Host
     write-host "You have selected a Compliance Search scoped for more than 1 mailbox, please press any key to restart and select a search scoped for a single mailbox."
-    Write-Log -function "Start-complianceSearchBulkDelete" -step  "Selecting a Compliance Search scoped for a single mailbox" -Description "Selected the Compliance Search '$ComplianceSearch', which is scoped for more than 1 mailbox, redirecting to new search selection."
+    Write-Host -function "Start-complianceSearchBulkDelete" -step  "Selecting a Compliance Search scoped for a single mailbox" -Description "Selected the Compliance Search '$ComplianceSearch', which is scoped for more than 1 mailbox, redirecting to new search selection."
     Read-Key
     Start-O365TroubleshootersMenu
 }
@@ -144,9 +144,9 @@ $ts = get-date -Format yyyyMMdd_HHmmss
 $ExportPath = "$global:WSPath\ComplianceSearch_bulkdelete_$ts"
 mkdir $ExportPath -Force | out-null
 $searchdetails | export-csv -Path $ExportPath\Selected_search_details.csv -NoTypeInformation 
-Write-Log -function "Start-complianceSearchBulkDelete" -step  "Creating report object and exporting details for Compliance Search '$searchname' as csv file" -Description "Exported details for Compliance Search '$searchname' as csv file at path: $ExportPath\Selected_search_details.csv"
+Write-Host -function "Start-complianceSearchBulkDelete" -step  "Creating report object and exporting details for Compliance Search '$searchname' as csv file" -Description "Exported details for Compliance Search '$searchname' as csv file at path: $ExportPath\Selected_search_details.csv"
 
-Write-Log -function "Start-complianceSearchBulkDelete" -step  "User to select the Compliance Search" -Description "User selected the Compliance Search '$searchname'"
+Write-Host -function "Start-complianceSearchBulkDelete" -step  "User to select the Compliance Search" -Description "User selected the Compliance Search '$searchname'"
 
 Write-Host -ForegroundColor Yellow "You have selected the Compliance Search named '$Searchname', having $initialitems items found with their total size of $contentsize in mailbox '$location'."
 
@@ -219,7 +219,7 @@ If ($Option -ne "yes") {
 [PSCustomObject]$SectionHTML = New-ObjectForHTMLReport -SectionTitle $SectionTitle -SectionTitleColor "Black" -Description $Description -DataType "String" -EffectiveDataString " "
 $null = $TheObjectToConvertToHTML.Add($SectionHTML)
 
-Write-Log -function "Start-complianceSearchBulkDelete" -step  "User confirmation to go ahead with items deletion for Compliance Search '$searchname'" -Description "User '$global:userPrincipalName' confirmed to go ahead with items deletion for Compliance Search '$searchname'"
+Write-Host -function "Start-complianceSearchBulkDelete" -step  "User confirmation to go ahead with items deletion for Compliance Search '$searchname'" -Description "User '$global:userPrincipalName' confirmed to go ahead with items deletion for Compliance Search '$searchname'"
 
 # Identifying 'Recoverable Items', 'Purges', 'DiscoveryHolds' and 'Versions' folders - this part is taken from article:  
 Write-Host
@@ -265,7 +265,7 @@ Test-SearchStatusIsComplete $searchname
 $Iterations = [math]::Ceiling($initialitems / 10)
 $iteration = 0
 
-Write-Log -function "Start-complianceSearchBulkDelete" -step  "Identifying and excluding 'Recoverable Items'and 'Purges', 'DiscoveryHolds' and 'Versions' folders from Compliance Search '$searchname'" -Description "Identifyied and excluded 'Recoverable Items'and 'Purges', 'DiscoveryHolds' and 'Versions' folders from Compliance Search '$searchname'"
+Write-Host -function "Start-complianceSearchBulkDelete" -step  "Identifying and excluding 'Recoverable Items'and 'Purges', 'DiscoveryHolds' and 'Versions' folders from Compliance Search '$searchname'" -Description "Identifyied and excluded 'Recoverable Items'and 'Purges', 'DiscoveryHolds' and 'Versions' folders from Compliance Search '$searchname'"
 
 # Starting bulk deletion
     
@@ -297,7 +297,7 @@ DO {
         }
         catch {
             Start-Sleep -Seconds 5
-            Write-Log -function "Start-ComplianceSearchBulkDelete" -step  "Create new Compliance Search Action" -Description "$($PSItem.Exception.Message)"
+            Write-Host -function "Start-ComplianceSearchBulkDelete" -step  "Create new Compliance Search Action" -Description "$($PSItem.Exception.Message)"
             if ($i -lt 6) {
                 $i++
             } 
@@ -352,7 +352,7 @@ Write-Host "`nOutput was exported in the following location: $ExportPath" -Foreg
     
 Read-Key 
 
-Write-Log -function "Start-complianceSearchBulkDelete" -step  "Return to main menu" -Description "Done"
+Write-Host -function "Start-complianceSearchBulkDelete" -step  "Return to main menu" -Description "Done"
 
 Start-O365TroubleshootersMenu
     
