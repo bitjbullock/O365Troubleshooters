@@ -101,7 +101,7 @@ If ($compliancesearch.ExchangeLocation.count -ne 1) {
     write-host "You have selected a Compliance Search scoped for more than 1 mailbox, please press any key to restart and select a search scoped for a single mailbox."
     Write-Host -function "Start-complianceSearchBulkDelete" -step  "Selecting a Compliance Search scoped for a single mailbox" -Description "Selected the Compliance Search '$ComplianceSearch', which is scoped for more than 1 mailbox, redirecting to new search selection."
     Read-Key
-    Start-O365TroubleshootersMenu
+
 }
 
 # Get details for selected Compliance Search
@@ -186,7 +186,7 @@ If (($MaxAvailable -le 0) -and ($SIREnabled -and ($SIRRetainDays.Substring(0, 1)
     Write-Host "Not enough space available under 'Recoverable Items' folder to accommodate the items!"
     Write-Host "Either adjust the search query to return fewer items, or make additional space in 'Recoverable Items' mailbox folder."
     Read-Key
-    Start-O365TroubleshootersMenu
+
 }
 Elseif ($SIREnabled -and ($SIRRetainDays.Substring(0, 1) -ne "0")) {
     Write-Host "At the end of deleting the $initialitems items, mailbox '$location' will have $MaxAvailable bytes of free space remaining available under 'Recoverable Items' folder."
@@ -210,7 +210,7 @@ $option = $option.ToLower()
 If ($Option -ne "yes") { 
     Write-Host "You haven't confirmed by typing 'yes'. Press any key to restart."
     Read-Key
-    Start-O365TroubleshootersMenu 
+
 }
 
 # Add record of user confirmation to execution report
@@ -305,7 +305,7 @@ DO {
                 Write-Host "cannot create new search action, returning to menu"
                 Read-Key
                 &$cleanup
-                Start-O365TroubleshootersMenu
+                
             }
         }
     }   
@@ -353,7 +353,5 @@ Write-Host "`nOutput was exported in the following location: $ExportPath" -Foreg
 Read-Key 
 
 Write-Host -function "Start-complianceSearchBulkDelete" -step  "Return to main menu" -Description "Done"
-
-Start-O365TroubleshootersMenu
-    
+   
     
